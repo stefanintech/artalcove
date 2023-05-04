@@ -5,11 +5,13 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import User from './models/User.js'
 
 const app = express()
 
 const bcryptSalt = bcrypt.genSaltSync(10)
+const jwtSecret = 'fa324j24j32rjj24j24j24j'
 
 app.use(express.json())
 
@@ -48,7 +50,10 @@ app.post('/login', async (req,res) => {
     if (userDoc) {
         const passOk = bcrypt.compareSync(password, userDoc.password)
         if (passOk){
-            res.json('pass ok')
+            jwt.sign({email:userDoc.email, id:userDoc._id}, jwtSecret, {}, (err,token) => {
+                if (err) throw err;
+                res.cookie('token', token).json('pass ok')    
+            });
         } else {
             res.status(422).json('pass not ok')
         }
