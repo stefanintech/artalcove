@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { UserContext } from "../UserContext"
-import { Link, Navigate } from "react-router-dom"
+import { Link, Navigate, useParams } from "react-router-dom"
 
 export default function AccountPage() {
     const {ready, user} = useContext(UserContext)
@@ -13,7 +13,8 @@ export default function AccountPage() {
         return <Navigate to={'/login'} />
     }
 
-
+    const {subpage} = useParams();
+    console.log(subpage)
     
     return (
         <div>
