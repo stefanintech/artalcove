@@ -14,14 +14,22 @@ export default function AccountPage() {
     }
 
     const {subpage} = useParams();
-    console.log(subpage)
+
+    function linkClasses (type=null) {
+        let classes = 'py-2 px-6';
+        if (type === subpage || (subpage === undefined && type === 'profile')) {
+            classes += ' bg-primary text-white rounded-full'
+        }
+        return classes
+    }
+    
     
     return (
         <div>
             <nav className="w-full flex justify-center mt-8 gap-2">
-            <Link className="py-2 px-6 bg-primary text-white rounded-full" to={'/account'}>My profile</Link>
-                <Link className="py-2 px-6" to={'/account/bookings'}>My bookings</Link>
-                <Link className="py-2 px-6" to={'/account/places'}>My accommodations</Link>
+                <Link className={linkClasses('profile')} to={'/account'}>My profile</Link>
+                <Link className={linkClasses('bookings')} to={'/account/bookings'}>My bookings</Link>
+                <Link className={linkClasses('places')} to={'/account/places'}>My accommodations</Link>
             </nav>
         </div>
     )
