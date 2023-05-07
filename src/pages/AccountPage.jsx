@@ -1,10 +1,11 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { UserContext } from "../UserContext"
 import { Link, Navigate, useParams } from "react-router-dom"
 import axios from "axios";
 
 export default function AccountPage() {
-    const {ready, user} = useContext(UserContext)
+    const [redirect,setRedirect] = useState(null)
+    const {ready, user, setUser} = useContext(UserContext)
     let {subpage} = useParams();
     if (subpage === undefined) {
         subpage = 'profile'
@@ -12,17 +13,17 @@ export default function AccountPage() {
 
     async function logout() {
         await axios.post('/logout')
+        setRedirect('/')
+        setUser(null)
     }
 
     if (!ready) {
         return 'Loading...'
     }
 
-    if (ready && !user) {
+    if (ready && !user && !redirect) {
         return <Navigate to={'/login'} />
     }
-
-
 
     function linkClasses (type=null) {
         let classes = 'py-2 px-6';
@@ -32,7 +33,9 @@ export default function AccountPage() {
         return classes
     }
     
-    
+    if (redirect){
+        return <Navigate to={redirect} />
+    }   
     return (
         <div>
             <nav className="w-full flex justify-center mt-8 gap-2 mb-8">
